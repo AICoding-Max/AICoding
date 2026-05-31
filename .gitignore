@@ -1,35 +1,39 @@
-# Python
+﻿# Python
 __pycache__/
 *.py[cod]
+*$py.class
+*.so
 *.egg-info/
 dist/
 build/
 *.egg
-.eggs/
 
 # Virtual Environment
 venv/
-.venv/
 env/
+ENV/
 
 # IDE
-.idea/
 .vscode/
+.idea/
 *.swp
 *.swo
+
+# Environment variables
+.env
 
 # Output
 output/videos/*.mp4
 output/audio/*.mp3
-output/audio/*.wav
 output/subtitles/*.srt
+
+# User settings (contains API keys)
+config/user_settings.json
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Assets (keep structure, ignore large files)
-assets/music/*.mp3
-assets/music/*.wav
-assets/images/*.jpg
-assets/images/*.png
+# Logs
+*.log
+logs/

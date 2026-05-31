@@ -20,37 +20,14 @@ from moviepy import (
 
 )
 
-from src.utils import logger
+from src.platform_utils import find_font
+from src.utils import get_project_path, logger
 
-VIDEO_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'output', 'videos')
+VIDEO_DIR = str(get_project_path('output/videos'))
 
 os.makedirs(VIDEO_DIR, exist_ok=True)
 
-_FONT_CANDIDATES = [
-
-    'C:/Windows/Fonts/msyh.ttc',
-
-    'C:/Windows/Fonts/simhei.ttf',
-
-    'C:/Windows/Fonts/simsun.ttc',
-
-    '/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc',
-
-    '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc',
-
-]
-
-def _find_font():
-
-    for fp in _FONT_CANDIDATES:
-
-        if os.path.exists(fp):
-
-            return fp
-
-    return None
-
-_FONT_PATH = _find_font()
+_FONT_PATH = find_font()
 
 class VideoComposer:
 
@@ -216,7 +193,7 @@ class VideoComposer:
 
             draw.text((x, y), text, font=font, fill=fc)
 
-            proc_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "output", "processed")
+            proc_dir = str(get_project_path("output/processed"))
 
             os.makedirs(proc_dir, exist_ok=True)
 

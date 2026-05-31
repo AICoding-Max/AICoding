@@ -1,9 +1,9 @@
 import os
 from PIL import Image, ImageEnhance
-from src.utils import logger, list_files
+from src.utils import ensure_dir, get_project_path, logger, list_files
 
 IMAGE_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.bmp', '.webp')
-PROCESSED_DIR = r'D:\UserData\27149\Documents\shp\ai-video-generator\output\processed'
+PROCESSED_DIR = str(get_project_path('output/processed'))
 
 class ImageProcessor:
     def execute(self, images_dir, config):
@@ -14,7 +14,7 @@ class ImageProcessor:
         if not image_paths:
             logger.warning("No images found, using placeholder")
             return self._create_placeholder(width, height)
-        os.makedirs(PROCESSED_DIR, exist_ok=True)
+        ensure_dir(PROCESSED_DIR)
         processed = []
         for i, path in enumerate(image_paths):
             out_path = self.resize_and_crop(path, width, height, i)
@@ -41,7 +41,7 @@ class ImageProcessor:
         return out_path
 
     def _create_placeholder(self, width, height):
-        os.makedirs(PROCESSED_DIR, exist_ok=True)
+        ensure_dir(PROCESSED_DIR)
         colors = [(41,128,185),(39,174,96),(192,57,43),(142,68,173),(243,156,18)]
         paths = []
         for i, color in enumerate(colors):

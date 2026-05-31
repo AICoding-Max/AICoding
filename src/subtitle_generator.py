@@ -1,7 +1,7 @@
 import os
-from src.utils import logger, seconds_to_srt_time
+from src.utils import ensure_dir, get_project_path, logger, seconds_to_srt_time
 
-SRT_PATH = r'D:\UserData\27149\Documents\shp\ai-video-generator\output\subtitles\subtitle.srt'
+SRT_PATH = str(get_project_path('output/subtitles/subtitle.srt'))
 
 class SubtitleGenerator:
     def execute(self, segments, config, output_path):
@@ -14,7 +14,9 @@ class SubtitleGenerator:
             lines.append("%s --> %s" % (start, end))
             lines.append(seg.text)
             lines.append("")
-        with open(SRT_PATH, "w", encoding="utf-8") as f:
+        path = output_path or SRT_PATH
+        ensure_dir(os.path.dirname(path))
+        with open(path, "w", encoding="utf-8") as f:
             f.write("\n".join(lines))
-        logger.info("Subtitles saved: %s", SRT_PATH)
-        return SRT_PATH
+        logger.info("Subtitles saved: %s", path)
+        return path

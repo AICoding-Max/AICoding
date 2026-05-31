@@ -40,14 +40,14 @@ class ScriptGenerator:
     def clean_text(self, text: str) -> str:
         """Remove extra whitespace and normalize punctuation."""
         text = text.strip()
-        text = re.sub(r'\s+', ' ', text)
         text = re.sub(r'[\r\n]+', '\n', text)
+        text = re.sub(r'[^\S\n]+', ' ', text)
         return text
 
     def split_into_segments(self, text: str, config: dict) -> List[ScriptSegment]:
         """Split text into segments by punctuation or newline."""
         max_chars = config.get("script", {}).get("max_chars_per_segment", 30)
-        raw_parts = re.split(r'[???!?\n]', text)
+        raw_parts = re.split(r'[。！？.!?\n]', text)
         raw_parts = [p.strip() for p in raw_parts if p.strip()]
 
         segments = []
@@ -65,7 +65,7 @@ class ScriptGenerator:
 
     def _split_long_text(self, text: str, max_chars: int) -> List[str]:
         """Split a long text segment by commas or length."""
-        parts = re.split(r'[?,?;?]', text)
+        parts = re.split(r'[,，;；]', text)
         parts = [p.strip() for p in parts if p.strip()]
         result = []
         for p in parts:

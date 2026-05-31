@@ -8,9 +8,9 @@ import os
 import time
 import urllib.request
 import ssl
-from src.utils import logger, ensure_dir
+from src.utils import ensure_dir, get_project_path, logger
 
-OUTPUT_DIR = r'D:\UserData\27149\Documents\shp\ai-video-generator\output\ai_videos'
+OUTPUT_DIR = str(get_project_path('output/ai_videos'))
 API_BASE = 'https://api.siliconflow.cn/v1'
 
 
@@ -35,7 +35,7 @@ class AiVideoGenerator:
         logger.info("Generating AI video...")
         logger.info("Prompt: %s", prompt[:80])
 
-        os.makedirs(OUTPUT_DIR, exist_ok=True)
+        ensure_dir(OUTPUT_DIR)
 
         if image_path:
             return self._generate_i2v(prompt, image_path, config)

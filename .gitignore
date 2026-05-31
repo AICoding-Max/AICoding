@@ -22,10 +22,8 @@ ENV/
 # Environment variables
 .env
 
-# Output
-output/videos/*.mp4
-output/audio/*.mp3
-output/subtitles/*.srt
+# Generated output
+output/
 
 # User settings (contains API keys)
 config/user_settings.json

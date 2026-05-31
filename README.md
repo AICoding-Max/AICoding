@@ -38,7 +38,8 @@
 ### 环境要求
 
 - Python 3.10 或更高版本
-- FFmpeg（用于视频处理）
+- Windows 10/11 或 macOS 12+
+- FFmpeg（`requirements.txt` 会安装 MoviePy 使用的 `imageio-ffmpeg`）
 - 一个视频生成 API Key
 
 ### 一键安装
@@ -62,9 +63,46 @@ pip install -r requirements.txt
 python app.py
 ```
 
+命令行模式调用 SiliconFlow 时，请通过环境变量配置密钥，不要将密钥写入版本库：
+
+```bash
+# Windows PowerShell
+$env:SILICONFLOW_API_KEY = "your-api-key"
+
+# macOS/Linux
+export SILICONFLOW_API_KEY="your-api-key"
+```
+
 ### 🌐 访问
 
 启动后在浏览器打开: **http://localhost:5000**
+
+### 桌面界面
+
+```bash
+python ui_app.py
+```
+
+Windows 与 macOS 均支持桌面界面。可先运行 `python -m tkinter` 检查 Tkinter 是否可用。
+
+### FFmpeg
+
+默认安装的 `imageio-ffmpeg` 可供 MoviePy 使用。如需在终端直接调用 `ffmpeg`，请额外安装系统版本并加入 `PATH`：
+
+```bash
+# macOS
+brew install ffmpeg
+```
+
+字幕会自动探测 Windows 和 macOS 常见中文字体。也可以显式指定字体文件：
+
+```bash
+# Windows PowerShell
+$env:AICODING_FONT_PATH = "C:\Windows\Fonts\msyh.ttc"
+
+# macOS
+export AICODING_FONT_PATH="/System/Library/Fonts/PingFang.ttc"
+```
 
 ---
 

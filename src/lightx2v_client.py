@@ -11,9 +11,9 @@ import os
 import time
 import urllib.request
 import ssl
-from src.utils import logger, ensure_dir
+from src.utils import ensure_dir, get_project_path, logger
 
-OUTPUT_DIR = r'D:\UserData\27149\Documents\shp\ai-video-generator\output\lightx2v_videos'
+OUTPUT_DIR = str(get_project_path('output/lightx2v_videos'))
 
 
 class LightX2VClient:
@@ -165,7 +165,7 @@ class LightX2VClient:
         Returns:
             Path to downloaded video file, or None.
         """
-        os.makedirs(OUTPUT_DIR, exist_ok=True)
+        ensure_dir(OUTPUT_DIR)
         timestamp = int(time.time())
         local_path = os.path.join(OUTPUT_DIR, 'lightx2v_%d.mp4' % timestamp)
 

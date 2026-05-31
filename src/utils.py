@@ -1,8 +1,6 @@
 import os
 import logging
-import yaml
 from pathlib import Path
-from datetime import timedelta
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -19,20 +17,21 @@ def setup_logger(name="ai_video", level=logging.INFO):
 logger = setup_logger()
 
 def load_config(config_path=None):
+    import yaml
+
     if config_path is None:
         config_path = str(PROJECT_ROOT / "config" / "settings.yaml")
     with open(config_path, "r", encoding="utf-8") as fh:
-        cfg = yaml.safe_load(fh)
+        cfg = yaml.safe_load(fh) or {}
     logger.info("Config loaded: %s", config_path)
     return cfg
 
 def seconds_to_srt_time(seconds):
-    td = timedelta(seconds=max(seconds, 0))
-    total = int(td.total_seconds())
+    total_ms = int(max(float(seconds), 0.0) * 1000)
+    total, ms = divmod(total_ms, 1000)
     h = total // 3600
     m = (total % 3600) // 60
     s = total % 60
-    ms = int((seconds - int(seconds)) * 1000)
     return "%02d:%02d:%02d,%03d" % (h, m, s, ms)
 
 def srt_time_to_seconds(srt_time):
@@ -43,7 +42,8 @@ def srt_time_to_seconds(srt_time):
     return h * 3600 + m * 60 + s + ms / 1000.0
 
 def ensure_dir(path):
-    os.makedirs(path, exist_ok=True)
+    if path:
+        os.makedirs(path, exist_ok=True)
 
 def get_project_path(relative_path):
     return PROJECT_ROOT / relative_path

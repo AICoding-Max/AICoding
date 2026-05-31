@@ -1,4 +1,4 @@
-import os, time, threading, tkinter as tk
+import os, queue, time, threading, tkinter as tk
 from tkinter import ttk
 import sys
 
@@ -6,6 +6,7 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, BASE)
 
 from src.utils import load_config
+from src.platform_utils import open_path
 from src.script_generator import ScriptGenerator
 from src.image_processor import ImageProcessor
 from src.tts_generator import TtsGenerator
@@ -26,6 +27,7 @@ class App:
         self.vc = VideoComposer()
         self.busy = False
         self.last = None
+        self.events = queue.Queue()
         self._ui()
 
     def _ui(self):
@@ -99,24 +101,35 @@ class App:
 
     def _gen(self):
         if self.busy: return
+        task = self._build_task()
+        if not task: return
         self.busy = True
         self.gb.config(state="disabled")
         self.sv.set("Generating...")
         self.pv.set(0)
-        threading.Thread(target=self._run, daemon=True).start()
+        threading.Thread(target=self._run, args=(task,), daemon=True).start()
         self._poll()
 
-    def _run(self):
+    def _build_task(self):
+        mode = self.mv.get()
+        if mode == "classic":
+            text = self.te.get("1.0", tk.END).strip()
+            if not text:
+                self.sv.set("Enter script")
+                return None
+            return {"mode": mode, "text": text}
+        return {
+            "mode": mode,
+            "style": self.dsv.get(),
+            "character": self.cv.get(),
+        }
+
+    def _run(self, task):
+        result = None
         try:
-            m = self.mv.get()
-            if m == "classic":
-                tx = self.te.get("1.0", tk.END).strip()
-                if not tx:
-                    self.sv.set("Enter script")
-                    self.busy = False
-                    return
+            if task["mode"] == "classic":
                 self._sp(15, "Script...")
-                seg = self.sg.execute(tx, self.cfg)
+                seg = self.sg.execute(task["text"], self.cfg)
                 self._sp(30, "Images...")
                 imgs = os.path.join(BASE, "assets", "images")
                 ip = self.ip.execute(imgs, self.cfg)
@@ -128,13 +141,13 @@ class App:
                 self.sub.execute(seg, self.cfg, None)
                 self._sp(85, "Video...")
                 out = os.path.join(BASE, "output", "videos", "v_%d.mp4" % int(time.time()))
-                res = self.vc.execute(ip, au, seg, self.cfg, out)
+                result = self.vc.execute(ip, au, seg, self.cfg, out)
             else:
                 self._sp(15, "Images...")
                 imgs = os.path.join(BASE, "assets", "images")
                 ip = self.ip.execute(imgs, self.cfg)
                 self._sp(35, "Script...")
-                txt = "%s dance: %s" % (self.dsv.get(), self.cv.get())
+                txt = "%s dance: %s" % (task["style"], task["character"])
                 seg = self.sg.execute(txt, self.cfg)
                 self._sp(50, "Voice...")
                 au = None
@@ -144,27 +157,47 @@ class App:
                 self.sub.execute(seg, self.cfg, None)
                 self._sp(85, "Video...")
                 out = os.path.join(BASE, "output", "videos", "v_%d.mp4" % int(time.time()))
-                res = self.vc.execute(ip, au, seg, self.cfg, out)
-            self.last = res
+                result = self.vc.execute(ip, au, seg, self.cfg, out)
             self._sp(100, "Done!")
-            self.root.after(0, self._hist)
         except Exception as e:
-            self.sv.set("Error: %s" % str(e))
+            self._sp(0, "Error: %s" % str(e))
         finally:
-            self.busy = False
-            self.root.after(0, lambda: self.gb.config(state="normal"))
+            self.events.put(("finish", result))
 
     def _sp(self, p, m):
+        self.events.put(("progress", p, m))
+
+    def _set_progress(self, p, m):
         self.pv.set(p)
         self.sv.set(m)
 
+    def _finish(self, result):
+        if result:
+            self.last = result
+            self._hist()
+        self.busy = False
+        self.gb.config(state="normal")
+
     def _poll(self):
+        while True:
+            try:
+                event = self.events.get_nowait()
+            except queue.Empty:
+                break
+            if event[0] == "progress":
+                self._set_progress(event[1], event[2])
+            elif event[0] == "finish":
+                self._finish(event[1])
         if self.busy: self.root.after(500, self._poll)
 
     def _open(self):
         d = os.path.join(BASE, "output", "videos")
-        if self.last and os.path.exists(self.last): os.startfile(self.last)
-        else: os.startfile(d)
+        os.makedirs(d, exist_ok=True)
+        target = self.last if self.last and os.path.exists(self.last) else d
+        try:
+            open_path(target)
+        except OSError as e:
+            self.sv.set("Open failed: %s" % str(e))
 
     def _hist(self):
         self.hl.delete(0, tk.END)

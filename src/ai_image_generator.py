@@ -8,9 +8,9 @@ import os
 import time
 import urllib.request
 import ssl
-from src.utils import logger, ensure_dir
+from src.utils import ensure_dir, get_project_path, logger
 
-OUTPUT_DIR = r'D:\UserData\27149\Documents\shp\ai-video-generator\output\ai_images'
+OUTPUT_DIR = str(get_project_path('output/ai_images'))
 API_BASE = 'https://api.siliconflow.cn/v1'
 
 
@@ -38,7 +38,7 @@ class AiImageGenerator:
         size = config.get("ai_image", {}).get("size", "1024x1024")
         steps = config.get("ai_image", {}).get("num_inference_steps", 25)
 
-        os.makedirs(OUTPUT_DIR, exist_ok=True)
+        ensure_dir(OUTPUT_DIR)
 
         # Call SiliconFlow image API
         image_url = self._generate_image(prompt, model, size, steps)

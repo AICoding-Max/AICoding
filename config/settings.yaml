@@ -36,7 +36,8 @@ backend: "siliconflow"
 
 # SiliconFlow API settings
 api:
-  siliconflow_key: "sk-xawfcqvyqabblfxnqbshdfxyswtutydatlwnnwtqyruqunhw"
+  # Set SILICONFLOW_API_KEY in the environment. Do not commit API keys.
+  siliconflow_key: ""
   base_url: "https://api.siliconflow.cn/v1"
 
 # LightX2V server settings (self-hosted)

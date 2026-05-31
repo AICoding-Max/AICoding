@@ -11,7 +11,7 @@ video:
 
 subtitle:
   enabled: true
-  font_name: "Microsoft YaHei"
+  # Font is auto-detected. Set AICODING_FONT_PATH to override it.
   font_size: 56
   font_color: "white"
   stroke_color: "black"

@@ -18,7 +18,7 @@ class VideoPipeline:
         self.tts_gen = TtsGenerator()
         self.subtitle_gen = SubtitleGenerator()
         self.video_composer = VideoComposer()
-        api_key = config.get('api', {}).get('siliconflow_key', '')
+        api_key = BackendConfig(config).siliconflow_key
         self.prompt_opt = PromptOptimizer(api_key) if api_key else None
 
     def run_classic(self, topic=None, text=None):

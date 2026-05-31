@@ -399,7 +399,11 @@
             }
             
             try {
-                const resp = await fetch('/api/models?api_url=' + encodeURIComponent(s.url) + '&api_key=' + encodeURIComponent(s.key));
+                const resp = await fetch('/api/models', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ api_url: s.url, api_key: s.key })
+                });
                 const data = await resp.json();
                 
                 const videoSelect = document.getElementById('vm-' + idx);

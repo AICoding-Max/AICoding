@@ -8,7 +8,7 @@ class BackendConfig:
         cfg = config_dict or {}
         self.backend = cfg.get('backend', 'siliconflow')
         sf = cfg.get('api', {})
-        self.siliconflow_key = sf.get('siliconflow_key', '')
+        self.siliconflow_key = os.getenv('SILICONFLOW_API_KEY') or sf.get('siliconflow_key', '')
         self.siliconflow_base = sf.get('base_url', 'https://api.siliconflow.cn/v1')
         l2v = cfg.get('lightx2v', {})
         self.lightx2v_url = l2v.get('server_url', 'http://localhost:8000')
@@ -139,7 +139,8 @@ class LightX2VBackend:
             req = urllib.request.Request(self.base + '/v1/service/status', headers={'User-Agent': 'AiVideoGen/2.0'})
             resp = urllib.request.urlopen(req, context=self.ctx, timeout=10)
             return json.loads(resp.read()).get('status') != 'error'
-        except:
+        except Exception as exc:
+            logger.debug('LightX2V availability check failed: %s', exc)
             return False
 
     def generate_video(self, prompt, image_path=None, negative_prompt=None):
@@ -173,7 +174,8 @@ class LightX2VBackend:
                     return self._download_result(task_id)
                 if status in ('failed', 'error'):
                     return None
-            except:
+            except Exception as exc:
+                logger.debug('LightX2V poll error: %s', exc)
                 continue
         return None
 

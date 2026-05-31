@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Output
+output/videos/*.mp4
+output/audio/*.mp3
+output/audio/*.wav
+output/subtitles/*.srt
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Assets (keep structure, ignore large files)
+assets/music/*.mp3
+assets/music/*.wav
+assets/images/*.jpg
+assets/images/*.png

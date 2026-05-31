@@ -1,0 +1,68 @@
+# AI Video Generator - Configuration
+
+# Video output settings
+video:
+  width: 1080
+  height: 1920
+  fps: 30
+  duration_per_image: 4
+  output_format: mp4
+
+# Subtitle settings
+subtitle:
+  enabled: true
+  font_size: 56
+  font_color: "white"
+  stroke_color: "black"
+  stroke_width: 3
+  position: "bottom"
+  bottom_margin: 180
+
+# Audio settings
+audio:
+  tts_enabled: true
+  voice: "zh-CN-XiaoxiaoNeural"
+  rate: "+0%"
+  background_music_enabled: false
+  background_music_volume: 0.20
+
+# Script settings
+script:
+  max_chars_per_segment: 30
+  min_duration: 2.0
+
+# Backend selection: "siliconflow" or "lightx2v"
+backend: "siliconflow"
+
+# SiliconFlow API settings
+api:
+  siliconflow_key: "sk-xawfcqvyqabblfxnqbshdfxyswtutydatlwnnwtqyruqunhw"
+  base_url: "https://api.siliconflow.cn/v1"
+
+# LightX2V server settings (self-hosted)
+lightx2v:
+  server_url: "http://localhost:8000"
+  max_wait_seconds: 600
+  poll_interval_seconds: 5
+  # Models: Wan 2.2, LTX 2, etc.
+  default_target_shape: [720, 1280]
+
+# AI Image generation settings
+ai_image:
+  enabled: true
+  model: "Qwen/Qwen-Image"
+  size: "1024x1024"
+  num_inference_steps: 25
+
+# AI Video generation settings (SiliconFlow)
+ai_video:
+  enabled: true
+  t2v_model: "Wan-AI/Wan2.2-T2V-A14B"
+  i2v_model: "Wan-AI/Wan2.2-I2V-A14B"
+  size: "1280x720"
+
+# Prompt optimization settings
+prompt:
+  enabled: true
+  optimize_image_prompt: true
+  optimize_video_prompt: true

@@ -1,0 +1,37 @@
+# Demo configuration for AI Video Generator
+# Adjust settings for your specific use case
+
+video:
+  width: 1080
+  height: 1920
+  fps: 30
+  duration_per_image: 4
+  output_format: mp4
+  aspect_ratio: "9:16"
+
+subtitle:
+  enabled: true
+  font_name: "Microsoft YaHei"
+  font_size: 56
+  font_color: "white"
+  stroke_color: "black"
+  stroke_width: 3
+  position: "bottom"
+  bottom_margin: 180
+
+audio:
+  tts_enabled: true
+  voice: "zh-CN-YunxiNeural"
+  rate: "+10%"
+  background_music_enabled: false
+  background_music_volume: 0.20
+  voice_volume: 1.0
+
+script:
+  max_chars_per_segment: 25
+  min_duration: 2.0
+
+output:
+  video_path: "output/videos/demo_video.mp4"
+  audio_path: "output/audio/demo_voice.mp3"
+  subtitle_path: "output/subtitles/demo_subtitle.srt"

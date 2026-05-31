@@ -1,0 +1,7 @@
+moviepy==1.0.3
+opencv-python
+pillow
+edge-tts
+pydub
+pyyaml
+numpy
